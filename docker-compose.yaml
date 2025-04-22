@@ -1,0 +1,10 @@
+services:
+  dorlova-nail-bot:
+    image: dorlova-nail-bot:latest
+    build:
+      context: .
+    env_file:
+      - .env
+
+
+
