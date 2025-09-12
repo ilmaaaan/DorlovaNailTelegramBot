@@ -22,26 +22,30 @@ public class NailStudioBot extends TelegramLongPollingBot {
     private final Map<Long, String> userStates = new ConcurrentHashMap<>();
     private final Map<Long, Map<String, String>> userData = new ConcurrentHashMap<>();
     private final List<String> dashaServices = new CopyOnWriteArrayList<>(Arrays.asList(
-            "маникюр без покрытия (1800р)",
-            "маникюр с покрытием гель-лаком (2700р)",
-            "наращивание ногтей (4000р)",
-            "коррекция наращивания ногтей (3000р)",
-            "педикюр без покрытия (2000р)",
-            "педикюр с покрытием без обработки пяточек (2700р)",
-            "педикюр с покрытием и обработкой пяточек (2900р)"));
+            "маникюр без покрытия (2100р)",
+            "маникюр с покрытием гель-лаком (3000р)",
+            "наращивание ногтей (4300р)",
+            "коррекция наращивания ногтей (3300р)",
+            "педикюр без покрытия (2300р)",
+            "педикюр с покрытием без обработки пяточек (3000р)",
+            "педикюр с покрытием и обработкой пяточек (3200р)"
+    ));
 
     private final List<String> irinaServices = new CopyOnWriteArrayList<>(Arrays.asList(
-            "маникюр без покрытия (1100р)",
-            "маникюр с покрытием гель-лаком (1800р)",
-            "коррекция наращивания ногтей (2200р)",
-            "педикюр без покрытия (1600р)",
-            "педикюр с покрытием без обработки пяточек (2200р)",
-            "педикюр с покрытием и обработкой пяточек (2400р)"));
+            "маникюр без покрытия (1500р)",
+            "маникюр с покрытием гель-лаком (2200р)",
+            "наращивание ногтей (2800р)",
+            "коррекция наращивания ногтей (2600р)",
+            "педикюр без покрытия (2000р)",
+            "педикюр с покрытием без обработки пяточек (2600р)",
+            "педикюр с покрытием и обработкой пяточек (2800р)"
+    ));
 
-    private final List<String> kseniyaServices = new CopyOnWriteArrayList<>(Arrays.asList(
-            "маникюр без покрытия (1100р)",
-            "маникюр с покрытием гель-лаком (1800р)",
-            "коррекция наращивания ногтей (2200р)"));
+    private final List<String> polinaServices = new CopyOnWriteArrayList<>(Arrays.asList(
+            "маникюр без покрытия (300р)",
+            "маникюр с покрытием гель-лаком (500р)",
+            "коррекция наращивания ногтей (500р)"
+    ));
 
     private final String BOT_TOKEN;
     private final long DASHA_CHAT_ID;
@@ -86,7 +90,7 @@ public class NailStudioBot extends TelegramLongPollingBot {
                     case "START_SIGN_UP":
                         sendMessageWithKeyboard(chatId,
                                 "Выберите мастера, к которому Вы хотите записаться:",
-                                createKeyboard("Дарья", "Ирина", "Ксения"));
+                                createKeyboard("Дарья", "Ирина", "Полина"));
                         userStates.put(chatId, "SELECT_MASTER");
                         break;
                     case "SELECT_MASTER":
@@ -107,10 +111,10 @@ public class NailStudioBot extends TelegramLongPollingBot {
                                         "Выберите услугу:",
                                         createKeyboard(irinaServices));
 
-                            } else if (messageText.equalsIgnoreCase("Ксения")) {
+                            } else if (messageText.equalsIgnoreCase("Полина")) {
                                 sendMessageWithKeyboard(chatId,
                                         "Выберите услугу:",
-                                        createKeyboard(kseniyaServices));
+                                        createKeyboard(polinaServices));
                             }
                             userStates.put(chatId, "SELECT_SERVICE1");
                         }
@@ -140,7 +144,7 @@ public class NailStudioBot extends TelegramLongPollingBot {
                                         "Выберите услугу:",
                                         createKeyboard(irinaServices2));
 
-                            } else if (userData.get(chatId).get("Мастер").equalsIgnoreCase("Ксения")) {
+                            } else if (userData.get(chatId).get("Мастер").equalsIgnoreCase("Полина")) {
                                 List<String> kseniyaServices2 = new ArrayList<>();
                                 kseniyaServices2.add("без доп.услуги");
                                 kseniyaServices2.addAll(irinaServices);
@@ -322,5 +326,4 @@ public class NailStudioBot extends TelegramLongPollingBot {
         keyboardMarkup.setKeyboard(keyboardRows);
         return keyboardMarkup;
     }
-
 }
