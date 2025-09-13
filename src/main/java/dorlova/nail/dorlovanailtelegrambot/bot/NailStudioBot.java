@@ -147,7 +147,7 @@ public class NailStudioBot extends TelegramLongPollingBot {
                             } else if (userData.get(chatId).get("Мастер").equalsIgnoreCase("Полина")) {
                                 List<String> kseniyaServices2 = new ArrayList<>();
                                 kseniyaServices2.add("без доп.услуги");
-                                kseniyaServices2.addAll(irinaServices);
+                                kseniyaServices2.addAll(polinaServices);
                                 kseniyaServices2.remove(service1);
                                 sendMessageWithKeyboard(chatId,
                                         "Выберите услугу:",
