@@ -1,10 +1,53 @@
 services:
-  dorlova-nail-bot:
-    image: dorlova-nail-bot:latest
+  dorlova-nail-app:
     build:
       context: .
+      dockerfile: Dockerfile
+    image: dorlova-nail-app:latest
+    container_name: dorlova-nail-app
+    restart: always
+    ports:
+      - "${DORLOVA_NAIL_APP_PORT}:${DORLOVA_NAIL_APP_PORT}"
+    environment:
+      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE_NAME: ${MYSQL_DATABASE_NAME}
+      MYSQL_DATABASE_HOST: ${MYSQL_DATABASE_HOST}
+      MYSQL_DATABASE_PORT: ${MYSQL_DATABASE_PORT}
+      MYSQL_DATABASE_DRIVER: ${MYSQL_DATABASE_DRIVER}
+#    environment:
+#      MYSQL_ROOT_USER: root
+#      MYSQL_ROOT_PASSWORD: q12345678
+#      MYSQL_DATABASE_NAME: dorlova-nail
+#      MYSQL_DATABASE_HOST: localhost
+#      MYSQL_DATABASE_PORT: 3306
+#      MYSQL_DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
     env_file:
       - .env
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}
+#    environment:
+#      MYSQL_ROOT_PASSWORD: q12345678
+#      MYSQL_DATABASE: dorlova_nail
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    env_file:
+      - .env
+    ports:
+      - "${MYSQL_DATABASE_PORT}:${MYSQL_DATABASE_PORT}"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "${MYSQL_DATABASE_HOST}", "-u", "${MYSQL_ROOT_USER}", "-p${MYSQL_ROOT_PASSWORD}" ]
+      timeout: 20s
+      retries: 5
+      start_period: 30s
 
 
 

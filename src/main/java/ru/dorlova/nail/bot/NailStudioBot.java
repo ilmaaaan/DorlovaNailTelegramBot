@@ -1,4 +1,4 @@
-package dorlova.nail.dorlovanailtelegrambot.bot;
+package ru.dorlova.nail.bot;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -10,8 +10,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-//some changes here
-//some new dsafgasdkjlfjgaslkdjflaksdjflkasdjflasfsan falds fa
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,8 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NailStudioBot extends TelegramLongPollingBot {
 
-    private final Map<Long, String> userStates = new ConcurrentHashMap<>();
-    private final Map<Long, Map<String, String>> userData = new ConcurrentHashMap<>();
+    private final Map<String, String> userStates = new ConcurrentHashMap<>();
+    private final Map<String, Map<String, String>> userData = new ConcurrentHashMap<>();
     private final List<String> dashaServices = new CopyOnWriteArrayList<>(Arrays.asList(
             "маникюр без покрытия (2100р)",
             "маникюр с покрытием гель-лаком (3000р)",
@@ -48,14 +46,14 @@ public class NailStudioBot extends TelegramLongPollingBot {
     ));
 
     private final String BOT_TOKEN;
-    private final long DASHA_CHAT_ID;
-    private final long ILMAN_CHAT_ID;
+    private final String DASHA_CHAT_ID;
+    private final String ILMAN_CHAT_ID;
 
     {
         Dotenv dotenv = Dotenv.load();
         BOT_TOKEN = dotenv.get("TELEGRAM_BOT_TOKEN");
-        DASHA_CHAT_ID = Long.parseLong(dotenv.get("DASHA_CHAT_ID"));
-        ILMAN_CHAT_ID = Long.parseLong(dotenv.get("ILMAN_CHAT_ID"));
+        DASHA_CHAT_ID = dotenv.get("DASHA_CHAT_ID");
+        ILMAN_CHAT_ID = dotenv.get("ILMAN_CHAT_ID");
     }
 
     @Override
@@ -71,7 +69,7 @@ public class NailStudioBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            long chatId = update.getMessage().getChatId();
+            String chatId = update.getMessage().getChatId().toString();
             String messageText = update.getMessage().getText();
             String state = userStates.getOrDefault(chatId, "START");
 
@@ -268,9 +266,9 @@ public class NailStudioBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendMessage(long chatId, String text) {
+    private void sendMessage(String chatId, String text) {
         SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
+        message.setChatId(chatId);
         message.setText(text);
         try {
             execute(message);
@@ -279,9 +277,9 @@ public class NailStudioBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendMessageWithKeyboard(long chatId, String text, ReplyKeyboardMarkup keyboardMarkup) {
+    private void sendMessageWithKeyboard(String chatId, String text, ReplyKeyboardMarkup keyboardMarkup) {
         SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
+        message.setChatId(chatId);
         message.setText(text);
         message.setReplyMarkup(keyboardMarkup);
         try {
